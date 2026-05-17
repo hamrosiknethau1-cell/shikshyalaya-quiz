@@ -1,119 +1,8 @@
 import streamlit as st
 
-# १. पासवर्ड सुरक्षा (Password: nepal123)
+# १. प्रश्नहरू ट्र्याक गर्न र लगइन सुरक्षित राख्न सेसन स्टेट (Session State)
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
-
-# यदि लगइन भएको छैन भने मात्र यो विन्डो देखाउने
-if not st.session_state["authenticated"]:
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-        }
-        h1 { color: #1e3c72 !important; text-align: center; font-weight: bold; }
-        div.stButton > button {
-            background: linear-gradient(to right, #1e3c72, #2a5298);
-            color: white !important;
-            width: 100%;
-            font-weight: bold;
-            border-radius: 8px;
-        }
-        label { color: #1e3c72 !important; font-weight: bold; }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    st.title("🔒 शिक्षालय अनलाइन क्विज हब")
-    st.write("---")
-    password = st.text_input("कृपया वेबसाइटको भिडियो बनाउने मुख्य पासवर्ड राख्नुहोस्:", type="password")
-    
-    if st.button("प्रवेश गर्नुहोस् 🔓"):
-        if password == "nepal123":
-            st.session_state["authenticated"] = True
-            st.rerun()
-        else:
-            st.error("गलत पासवर्ड! कृपया सही पासवर्ड राख्नुहोस्।")
-    st.stop()
-
-
-# --- २. लगइन भइसकेपछि मात्र आकर्षक थीम र वाटरमार्क एक्टिभ गराउने CSS ---
-st.markdown(
-    """
-    <style>
-    /* मुख्य ब्याकग्राउन्ड */
-    .stApp {
-        background-color: #f0f4f8;
-        background-image: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-        position: relative;
-    }
-    
-    /* पछाडि पट्टि देखिने हल्का वाटरमार्क (Watermark) */
-    .stApp::before {
-        content: "SHIKSHYALAYA QUIZ HUB";
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 5rem;
-        font-weight: bold;
-        color: rgba(0, 51, 102, 0.04); /* एकदमै हल्का सुरक्षित रङ */
-        z-index: 0;
-        pointer-events: none;
-        white-space: nowrap;
-        text-align: center;
-    }
-
-    /* हेडलाइन र शीर्षकहरू रङ्गीन */
-    h1 {
-        color: #1e3c72 !important;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        font-weight: 800;
-    }
-    h2, h3 {
-        color: #2a5298 !important;
-        font-weight: bold;
-    }
-    
-    /* रेडियो बटन (Options) को बाकस */
-    div[data-testid="stRadio"] > label {
-        font-weight: bold;
-        color: #1e3c72 !important;
-        font-size: 1.1rem;
-    }
-    div[data-testid="stRadio"] p {
-        font-size: 1.1rem !important;
-        color: #222 !important;
-        font-weight: 500;
-    }
-    
-    /* उत्तर जाँच्ने र अर्को प्रश्नका रङ्गीन बटनहरू */
-    div.stButton > button {
-        background: linear-gradient(to right, #1e3c72, #2a5298) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        border: none !important;
-        padding: 0.5rem 2rem !important;
-        font-size: 1rem !important;
-        font-weight: bold !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    /* देब्रेपट्टीको मेनु बार (Sidebar) को रङ */
-    [data-testid="stSidebar"] {
-        background-image: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%) !important;
-    }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] label {
-        color: white !important;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# ३. प्रश्नहरू ट्र्याक गर्न सेसन स्टेट (Session State)
 if "current_question" not in st.session_state:
     st.session_state["current_question"] = 0
 if "score" not in st.session_state:
@@ -127,6 +16,97 @@ def reset_quiz():
     st.session_state["score"] = 0
     st.session_state["answered"] = False
 
+# २. लगइन विन्डो (यदि पासवर्ड हानेको छैन भने सिधै यो मात्र देखिन्छ)
+if not st.session_state["authenticated"]:
+    st.title("🔒 शिक्षालय अनलाइन क्विज हब")
+    st.subheader("वेबसाइट सुरक्षित छ")
+    st.write("---")
+    
+    password = st.text_input("कृपया भिडियो बनाउने मुख्य पासवर्ड राख्नुहोस्:", type="password")
+    
+    if st.button("प्रवेश गर्नुहोस् 🔓"):
+        if password == "nepal123":
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("गलत पासवर्ड! कृपया सही पासवर्ड राख्नुहोस्।")
+    st.stop()
+
+
+# --- ३. लगइन भइसकेपछि मात्र देखिने आकर्षक थीम, रङ र वाटरमार्क ---
+st.markdown(
+    """
+    <style>
+    /* मुख्य ब्याकग्राउन्ड र वाटरमार्क सेटिङ */
+    .stApp {
+        background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%) !important;
+        position: relative;
+    }
+    
+    /* पछाडि पट्टि देखिने हल्का वाटरमार्क (Watermark) */
+    .stApp::before {
+        content: "SHIKSHYALAYA QUIZ HUB";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 5.5rem;
+        font-weight: bold;
+        color: rgba(0, 51, 102, 0.05); /* एकदमै हल्का र सुरक्षित रङ */
+        z-index: 0;
+        pointer-events: none;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    /* मुख्य शीर्षक र उपशीर्षकहरूको आकर्षक रङ */
+    h1 {
+        color: #1e3c72 !important;
+        font-weight: 800 !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+        color: #2a5298 !important;
+        font-weight: bold !important;
+    }
+    
+    /* रेडियो बटन (Options) को बुँदा र अक्षरहरू प्रस्ट बनाउने */
+    div[data-testid="stRadio"] > label {
+        font-weight: bold !important;
+        color: #1e3c72 !important;
+        font-size: 1.2rem !important;
+    }
+    div[data-testid="stRadio"] p {
+        font-size: 1.15rem !important;
+        color: #111111 !important;
+        font-weight: bold !important;
+    }
+    
+    /* उत्तर जाँच्ने र अर्को प्रश्नका रङ्गीन बटनहरू */
+    div.stButton > button {
+        background: linear-gradient(to right, #1e3c72, #2a5298) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 0.6rem 2.5rem !important;
+        font-size: 1.1rem !important;
+        font-weight: bold !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* देब्रेपट्टीको मेनु बार (Sidebar) को नयाँ रङ */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%) !important;
+    }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] label {
+        color: white !important;
+        font-weight: bold !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # ४. मुख्य क्विज वेबसाइटको हेडलाइन
 st.title("📚 शिक्षालय (Shikshyalaya) क्विज हब")
 st.write("तपाईंको डिजिटल कानुनी र शैक्षिक सहयोगी")
@@ -135,20 +115,20 @@ st.markdown("---")
 # मेनु बार (Sidebar)
 st.sidebar.title("🎛️ मेनु बार")
 topic = st.sidebar.radio(
-    "क्виजको विषय छान्नुहोस्:",
+    "क्विजको विषय छान्नुहोस्:",
     ("गृहपृष्ठ (Home)", "नेपालको संविधान", "सैनिक ऐन, २०६३", "मुलुकी देवानी संहिता"),
     on_change=reset_quiz
 )
 
-# प्रश्नहरूको डाटाबेस
+# प्रश्नहरूको पूर्ण डाटाबेस (१०-१० वटा प्रश्नहरू)
 quiz_data = {
     "नेपालको संविधान": [
-        {"q": "१. नेपालको वर्तमान संविधान कहिले जारी भयो?", "options": ["२०७२ असोज ३", "२०७२ भदौ ३", "२०७२ कार्तिक ३"], "ans": "२०७२ असोज ३", "hint": "यो संबिधान २०७२ सालको वडादसैँको आसपास जारी भएको हो।"},
+        {"q": "१. नेपालको वर्तमान संविधान कहिले जारी भयो?", "options": ["२०७२ असोज ३", "२०७२ भभदौ ३", "२०७२ कार्तिक ३"], "ans": "२०७२ असोज ३", "hint": "यो संबिधान २०७२ सालको वडादसैँको आसपास जारी भएको हो।"},
         {"q": "२. नेपालको संविधानमा कतिवटा मौलिक हकहरू व्यवस्था गरिएको छ?", "options": ["३१ वटा", "३० वटा", "२५ वटा"], "ans": "३१ वटा", "hint": "भाग ३ मा सम्मानपूर्वक बाँच्न पाउने हकदेखि उपभोक्ताको हकसम्म समेटिएका छन्।"},
         {"q": "३. नेपालको संविधानमा कति भाग, धारा र अनुसूचीहरू छन्?", "options": ["३५ भाग, ३०८ धारा, ९ अनुसूची", "३५ भाग, धारा ३१५, धारा ८ अनुसूची", "३० भाग, ३०० धारा, ७ अनुसूची"], "ans": "३५ भाग, ३०८ धारा, ९ अनुसूची", "hint": "पहिलो जारी हुँदा र हालसम्म यो संरचना परिवर्तन भएको छैन।"},
         {"q": "४. नेपालको संविधानको कुन धारामा 'समानताको हक' व्यवस्था गरिएको छ?", "options": ["धारा १८", "धारा १६", "धारा १७"], "ans": "धारा १८", "hint": "यो हक मौलिक हक अन्तर्गत पर्दछ र सबै नागरिक कानुनको दृष्टिमा समान हुने भन्छ।"},
-        {"q": "५. संविधान अनुसार नेपालको सार्वभौमसत्ता र राजकीयसत्ता कसма निहित रहेको छ?", "options": ["नेपाली जनतामा", "राष्ट्रपतिमा", "संसदमा"], "ans": "नेपाली जनतामा", "hint": "धारा २ मा यसको स्पष्ट व्याख्या गरिएको छ।"},
-        {"q": "६. नेपालको संविधान संसोधन सम्बन्धी व्यवस्था कुन भागमा गरिएको छ?", "options": ["भाग २७", "भाग २८", "भाग २९"], "ans": "भाग २७", "hint": "यो भागमा संविधान संसोधनको प्रक्रिया र सीमाहरू तोकिएका छन्।"},
+        {"q": "५. संविधान अनुसार नेपालको सार्वभौमसत्ता र राजकीयसत्ता कसमा निहित रहेको छ?", "options": ["नेपाली जनतामा", "राष्ट्रपतिमा", "संसदमा"], "ans": "नेपाली जनतामा", "hint": "धारा २ मा यसको स्पष्ट व्याख्या गरिएको छ।"},
+        {"q": "६. नेपालको संविधान संसोधन सम्बन्धी व्यवस्था कुन भागमा गरिएको छ?", "options": ["भाग २7", "भाग २८", "भाग २९"], "ans": "भाग २७", "hint": "यो भागमा संविधान संसोधनको प्रक्रिया र सीमाहरू तोकिएका छन्।"},
         {"q": "७. नेपालको संविधानमा नागरिकका कतिवटा कर्तव्यहरू तोकिएका छन्?", "options": ["४ वटा", "५ वटा", "६ वटा"], "ans": "४ वटा", "hint": "धारा ४८ मा राष्ट्रप्रति वफादार हुनेसहितका कर्तव्य छन्।"},
         {"q": "८. संबैधानिक निकाय 'अख्तियार दुरुपयोग अनुसन्धान आयोग' सम्बन्धी व्यवस्था कुन भागमा छ?", "options": ["भाग २१", "भाग २२", "भाग २३"], "ans": "भाग २१", "hint": "यो भ्रष्टाचार नियन्त्रण गर्ने नेपालको प्रमुख संवैधानिक निकाय हो।"},
         {"q": "९. नेपालको राष्ट्रिय झण्डा सम्बन्धी व्यवस्था संविधानको कुन अनुसूचीमा छ?", "options": ["अनुसूची १", "अनुसूची २", "अनुसूची ३"], "ans": "अनुसूची १", "hint": "यसमा झण्डा बनाउने तरिका र रङहरूको ठ्याक्कै नाप दिइएको छ।"},
@@ -164,7 +144,7 @@ quiz_data = {
         {"q": "७. सैनिक अदालतको गठन सम्बन्धी व्यवस्था सैनिक ऐनको कुन परिच्छेदमा छ?", "options": ["परिच्छेद ११", "परिच्छेद १०", "परिच्छेद १२"], "ans": "परिच्छेद ११", "hint": "सैनिक कसुरहरूको सुनुवाइ गर्न विशेष अदालतहरूको व्यवस्था यही परिच्छेदमा छ।"},
         {"q": "८. सैनिक विशेष अदालतको अध्यक्ष को हुने व्यवस्था छ?", "options": ["उच्च अदालतको न्यायाधीश", "सैनिक रक्षा सचिव", "प्रधानसेनापति"], "ans": "उच्च अदालतको न्यायाधीश", "hint": "धारा ११९ अनुसार कानुनी निष्पक्षताका लागि अदालतको बहालवाला न्यायाधीश तोकिन्छ।"},
         {"q": "९. सैनिक ऐन बमोजिम भगौडा सैनिकलाई पक्रने अधिकार कसलाई हुन्छ?", "options": ["नेपाली सेना र नेपाल प्रहरी दुवैलाई", "सैनिक प्रहरीलाई मात्र", "नेपाल प्रहरीलाई मात्र"], "ans": "नेपाली सेना र नेपाल प्रहरी दुवैलाई", "hint": "गैरकानुनी रूपमा सेवा छाडेका व्यक्तिलाई नियन्त्रणमा लिन दुवै सुरक्षा निकाय समन्वय गर्छन्।"},
-        {"q": "१०. सैनिक सेवाबाट अवकाश दिने उमेर हद सम्बन्धी व्यवस्था कहाँ तोकिएको छ?", "options": ["सैनिक नियमावलीमा", "सैनिक ऐनमा", "नेपालको संविधानमा"], "ans": "सैनिक नियमावलीमा", "hint": "पद अनुसारको उमेरको हद र विस्तृत नियमावली सरकारले स्वीकृत गर्छ।"}
+        {"q": "१०. सैनिक सेवाबाट अवकाश दिने उमेर हद सम्बन्धी व्यवस्था कहाँ तोकिएको छ?", "options": ["सैनिक नियमावलीमा", "सैनिक ऐनमा", "नेपालको संविधानमा"], "ans": "सैनिक नियमावलीमा", "hint": "पद अनुसारको उमेरको हद र विस्तृत नियмаवली सरकारले स्वीकृत गर्छ।"}
     ],
     "मुलुकी देवानी संहिता": [
         {"q": "१. मुलुकी देवानी संहिता, २०७४ कहिलेदेखि लागू भयो?", "options": ["२०७५ भदौ १ गते", "२०७४ भदौ १ गते", "२०७५ असोज १ गते"], "ans": "२०७५ भदौ १ गते", "hint": "यो कानुन पुरानो मुलुकी ऐन, २०२० लाई प्रतिस्थापन गर्दै वर्षको पाँचौँ महिनाको पहिलो दिन लागू भएको हो।"},
